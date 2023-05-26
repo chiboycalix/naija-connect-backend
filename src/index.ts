@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from 'dotenv';
 import chalk from 'chalk';
+import cors from 'cors';
 import morgan from 'morgan';
 import { API } from './routes';
 import { resourceNotFoundHandler } from './middlewares/resourceNotFoundHandler'
@@ -17,6 +18,7 @@ const PORT = process.env.PORT || 2000;
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/naija-connect";
 
 app.use(session({ secret: 'YOUR_SESSION_SECRET', resave: true, saveUninitialized: true }));
+app.use(cors());
 app.use(passport.initialize());
 app.use(passport.session());
 const logger = morgan((tokens, req, res) => {
