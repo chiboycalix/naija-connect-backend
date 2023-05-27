@@ -12,7 +12,6 @@ import session from 'express-session';
 import { GoogleRouter } from "./routes/google";
 
 dotenv.config()
-const route = express.Router();
 const app = express();
 const PORT = process.env.PORT || 2000;
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/naija-connect";

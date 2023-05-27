@@ -21,4 +21,12 @@ export class UserRepository {
   async deleteUser(id: string): Promise<any | null> {
     return await User.findByIdAndDelete(id, { new: true }).select('-password');
   };
+
+  async getUserByEmail(email: string): Promise<IUser | null> {
+    return await User.findOne({ email });
+  }
+
+  async updateUserByEmail(email: string, updatedUser: any): Promise<any> {
+    return await User.findOne({ email }).updateOne(updatedUser);
+  }
 }
