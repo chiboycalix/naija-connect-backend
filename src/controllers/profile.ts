@@ -5,6 +5,15 @@ import { resourceNotFoundHandler } from '../middlewares/resourceNotFoundHandler'
 import { badRequestError } from '../middlewares/badRequestError';
 import { createProfileSchema } from '../validators/profile';
 import { Profile } from '../entity/Profile';
+import { v2 as cloudinary } from "cloudinary";
+import dotenv from 'dotenv';
+dotenv.config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
 
 export class ProfileController {
   private profileRepository: ProfileRepository;
@@ -82,6 +91,27 @@ export class ProfileController {
         return;
       }
       res.status(200).json({ message: 'Profile deleted successfully' });
+    } catch (error) {
+      console.error(error);
+      return next(error);
+    }
+  }
+
+  updloadProfileImage = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { id: userId } = req?.user as any;
+      const profile = await this.profileRepository.getProfileByUserId(userId) as any;
+      if (!profile) {
+        resourceNotFoundHandler(req, res, next)
+        return;
+      }
+      if (!req.file) {
+        badRequestError(req, res, next, 'Please upload an image', 400)
+        return;
+      }
+      const uploadedImage = await cloudinary.uploader.upload(req.file.path);
+      const updatedProfile = await this.profileRepository.updateProfile(profile._id, { profilePicture: uploadedImage.secure_url });
+      res.status(200).json(updatedProfile);
     } catch (error) {
       console.error(error);
       return next(error);

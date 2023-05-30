@@ -15,6 +15,10 @@ export class ProfileRepository {
     return await Profile.findById(profileId);
   }
 
+  async getProfileByUserId(userId: string): Promise<IProfile | null> {
+    return await Profile.findOne({ userId });
+  }
+
   async updateProfile(profileId: string, updatedProfile: UpdateQuery<IProfile>): Promise<IProfile | null> {
     return await Profile.findByIdAndUpdate(profileId, updatedProfile, { new: true });
   }
