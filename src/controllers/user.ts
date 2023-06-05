@@ -7,7 +7,7 @@ import { User } from "../entity/User";
 import { UserRepository } from "../repositories/User";
 import { createUserSchema, loginSchema } from "../validators/user";
 import { IUser } from "../interfaces/user";
-import { resourceNotFoundHandler } from "../middlewares/resourceNotFoundHandler";
+import { recordNotFoundHandler } from '../middlewares/recordNotFound';
 import { badRequestError } from "../middlewares/badRequestError";
 import { ROLES } from "../interfaces/role";
 import transporter from "../utils/emailConfig";
@@ -63,7 +63,7 @@ export class UserController {
       const id = req.params.id;
       const user = await this.userRepository.getUserById(id);
       if (!user) {
-        resourceNotFoundHandler(req, res, next);
+        recordNotFoundHandler(req, res, next);
         return;
       }
       res.status(200).json(user);
@@ -83,7 +83,7 @@ export class UserController {
       const updatedUser: IUser = req.body;
       const user = await this.userRepository.updateUser(id, updatedUser);
       if (!user) {
-        resourceNotFoundHandler(req, res, next);
+        recordNotFoundHandler(req, res, next);
         return;
       }
       res.status(200).json(user);
@@ -102,7 +102,7 @@ export class UserController {
       const id = req.params.id;
       const success = await this.userRepository.deleteUser(id);
       if (!success) {
-        resourceNotFoundHandler(req, res, next);
+        recordNotFoundHandler(req, res, next);
         return;
       }
       res.status(204).send();

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { resourceNotFoundHandler } from '../middlewares/resourceNotFoundHandler';
+import { recordNotFoundHandler } from '../middlewares/recordNotFound';
 import { IRole } from "../interfaces/role";
 import { RoleRepository } from "../repositories/Role";
 import { createRoleSchema} from '../validators/role';
@@ -38,7 +38,7 @@ export class RoleController {
       const id = req.params.id;
       const role = await this.roleRepository.getRoleById(id);
       if (!role) {
-        resourceNotFoundHandler(req, res, next)
+        recordNotFoundHandler(req, res, next)
         return;
       }
       res.status(200).json(role);
@@ -54,7 +54,7 @@ export class RoleController {
       const updatedRole: IRole = req.body;
       const role = await this.roleRepository.updateRole(id, updatedRole);
       if (!role) {
-        resourceNotFoundHandler(req, res, next)
+        recordNotFoundHandler(req, res, next)
         return;
       }
       res.status(200).json(role);
@@ -69,7 +69,7 @@ export class RoleController {
       const id = req.params.id;
       const success = await this.roleRepository.deleteRole(id);
       if (!success) {
-        resourceNotFoundHandler(req, res, next)
+        recordNotFoundHandler(req, res, next)
         return;
       }
       res.status(204).send();

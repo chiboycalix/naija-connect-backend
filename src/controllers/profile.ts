@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ProfileRepository } from "../repositories/Profile";
 import { IProfile } from "../interfaces/profile";
-import { resourceNotFoundHandler } from '../middlewares/resourceNotFoundHandler';
+import { recordNotFoundHandler } from '../middlewares/recordNotFound';
 import { badRequestError } from '../middlewares/badRequestError';
 import { createProfileSchema } from '../validators/profile';
 import { Profile } from '../entity/Profile';
@@ -56,7 +56,7 @@ export class ProfileController {
       const id = req.params.id;
       const profile = await this.profileRepository.getProfileById(id);
       if (!profile) {
-        resourceNotFoundHandler(req, res, next)
+        recordNotFoundHandler(req, res, next)
         return;
       }
       res.status(200).json(profile);
@@ -72,7 +72,7 @@ export class ProfileController {
       const updatedProfile: IProfile = req.body;
       const profile = await this.profileRepository.updateProfile(id, updatedProfile);
       if (!profile) {
-        resourceNotFoundHandler(req, res, next)
+        recordNotFoundHandler(req, res, next)
         return;
       }
       res.status(200).json(profile);
@@ -87,7 +87,7 @@ export class ProfileController {
       const id = req.params.id;
       const profile = await this.profileRepository.deleteProfile(id);
       if (!profile) {
-        resourceNotFoundHandler(req, res, next)
+        recordNotFoundHandler(req, res, next)
         return;
       }
       res.status(200).json({ message: 'Profile deleted successfully' });
@@ -102,7 +102,7 @@ export class ProfileController {
       const { id: userId } = req?.user as any;
       const profile = await this.profileRepository.getProfileByUserId(userId) as any;
       if (!profile) {
-        resourceNotFoundHandler(req, res, next)
+        recordNotFoundHandler(req, res, next)
         return;
       }
       if (!req.file) {
